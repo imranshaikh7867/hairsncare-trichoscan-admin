@@ -1,0 +1,9 @@
+/* Base document styles for the Care Atelier.
+ *
+ * The admin ships its own complete stylesheet (src/styles/admin.css, carried
+ * over unchanged). Only the page-level reset the original document relied on
+ * lives here, so nothing competes with that cascade.
+ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+#root { min-height: 100vh; }

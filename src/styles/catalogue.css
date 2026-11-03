@@ -1,0 +1,287 @@
+/* The product catalogue card.
+ *
+ * The catalogue is read-only now, so a card's whole job is to show what a
+ * product record holds — specification, ingredients, the care roles it
+ * serves, the diagnoses it is indicated for, its safety limits and the
+ * conditions that hold it back — rather than three fields and an edit
+ * button. Fields with nothing in them are not rendered at all, because half
+ * the catalogue is procedures and base cleansers with no strength or pack
+ * size, and a grid of blanks reads as broken data.
+ *
+ * Colours and radii come from admin.css; nothing here redefines them.
+ */
+
+#product-search {
+  max-width: 520px;
+  flex: 1 1 320px;
+}
+
+.productlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.pcard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  background: linear-gradient(130deg, #fffef9, #f2efe2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px #1a382008;
+}
+
+.pcard:hover {
+  border-color: #b89c60;
+}
+
+/* --- heading --- */
+
+.pcard-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.pcard-title {
+  flex: 1;
+  min-width: 0;
+}
+
+/* the eyebrow carries the record number and the regulatory class, and reads
+   as a label rather than a sentence */
+.pcard .eyebrow {
+  text-transform: uppercase;
+}
+
+.pcard-title h3 {
+  margin: 6px 0 4px;
+  font-size: 21px;
+  line-height: 1.25;
+}
+
+.psku {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: #6a7560;
+}
+
+.pflags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.badge-published {
+  background: #dcebd7;
+  color: #2b5133;
+}
+
+.badge-draft,
+.badge-archived {
+  background: #e6e3d4;
+  color: #5e5b45;
+}
+
+.badge-in-stock {
+  background: #e3efdd;
+  color: #39603b;
+}
+
+.badge-out-of-stock {
+  background: #f6e3d4;
+  color: #8a4a26;
+}
+
+.pdesc {
+  margin: 0;
+  font-size: 13px;
+  color: #3f5340;
+}
+
+/* --- specification grid --- */
+
+.pspecs {
+  display: grid;
+  /* narrow enough that a topical's five specs sit on one row rather than
+     leaving a single orphan underneath */
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 10px 12px;
+  margin: 0;
+  padding: 14px 0;
+  border-top: 1px solid #dcdcc8;
+  border-bottom: 1px solid #dcdcc8;
+}
+
+.pspecs dt {
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #8a7a4e;
+}
+
+.pspecs dd {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #26412d;
+}
+
+/* --- labelled chip rows --- */
+
+.pfield {
+  display: grid;
+  gap: 7px;
+}
+
+.plabel {
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #8a7a4e;
+}
+
+.chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 1px solid #c8d0b8;
+  border-radius: 20px;
+  background: #eef1e5;
+  color: #3b5340;
+}
+
+.chip-ingredient {
+  background: #e7efe1;
+  border-color: #b6c9ae;
+  color: #2c5235;
+}
+
+.chip-role {
+  background: #f1ebda;
+  border-color: #d3c49a;
+  color: #6a5520;
+}
+
+.chip-dx {
+  background: #e4ebf2;
+  border-color: #b0c2d2;
+  color: #2d4a63;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.chip-contra {
+  background: #f6e6da;
+  border-color: #dcb79b;
+  color: #85462a;
+}
+
+/* --- safety and holds --- */
+
+.psafety ul,
+.pholds ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.psafety li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12px;
+  color: #3f5340;
+}
+
+.psafety li::before {
+  content: "·";
+  position: absolute;
+  left: 4px;
+  font-weight: 700;
+  color: #96813f;
+}
+
+.pholds li {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  background: #f6ead9;
+  border-left: 3px solid #b98a43;
+  border-radius: 0 8px 8px 0;
+}
+
+.pholds code {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 11px;
+  color: #6c4c18;
+  overflow-wrap: anywhere;
+}
+
+.pholds span {
+  font-size: 12px;
+  color: #5f4a28;
+}
+
+.pwarn {
+  margin: 0;
+  padding: 11px 13px;
+  font-size: 12px;
+  background: #f8e8da;
+  border-left: 3px solid #a8472f;
+  border-radius: 0 8px 8px 0;
+  color: #7b3c26;
+}
+
+.pwarn strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+/* --- provenance --- */
+
+.pcard-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: auto; /* hold the line at the bottom however tall the card is */
+  padding-top: 13px;
+  border-top: 1px solid #dcdcc8;
+  font-size: 10.5px;
+  color: #747d67;
+}
+
+@media (max-width: 1100px) {
+  .productlist {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .pcard {
+    padding: 18px;
+  }
+
+  .pcard-head {
+    flex-direction: column;
+  }
+
+  .pflags {
+    flex-direction: row;
+    align-items: center;
+  }
+}

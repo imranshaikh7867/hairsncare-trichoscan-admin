@@ -1,0 +1,193 @@
+/* The sign-in screen: brand on one side, the form on the other.
+ *
+ * Every colour, face and control treatment is borrowed from the workspace
+ * stylesheet rather than invented here, so the two screens read as one
+ * product. Nothing in this file touches a workspace selector.
+ */
+
+.login {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #f4f1e7;
+}
+
+/* --- the brand half --- */
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 48px 56px;
+  color: #f6edda;
+  background:
+    radial-gradient(ellipse at top right, #54704b66, transparent 65%),
+    linear-gradient(125deg, #0c291f, #224a35);
+  border-right: 1px solid #b6a06a;
+}
+
+.login-brand-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.login-brand .eyebrow {
+  color: #dfc58b;
+}
+
+.login-brand-body {
+  margin-top: auto; /* the headline sits low, above the figures */
+}
+
+.login-brand-body h1 {
+  margin: 14px 0 18px;
+  font-size: 50px;
+}
+
+.login-brand-body em {
+  color: #dbc183;
+  font-weight: 400;
+}
+
+.login-brand-body p {
+  max-width: 46ch;
+  color: #d5e1cd;
+}
+
+.login-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 22px 0 0;
+  list-style: none;
+  border-top: 1px solid #b6a06a44;
+}
+
+.login-points strong {
+  display: block;
+  margin-bottom: 4px;
+  font: 30px Georgia, serif;
+  color: #e6cd94;
+}
+
+.login-points span {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #bdcdb4;
+}
+
+/* --- the form half --- */
+
+.login-panel {
+  display: grid;
+  place-items: center;
+  padding: 40px 32px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form h2 {
+  margin: 6px 0 8px;
+  font-size: 34px;
+}
+
+.login-form .note {
+  margin: 0 0 26px;
+}
+
+.login-form label {
+  margin-bottom: 18px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: #46583d;
+}
+
+.login-password {
+  position: relative;
+  display: block;
+}
+
+.login-password input {
+  padding-right: 76px; /* clear of the show/hide control */
+}
+
+.login-reveal {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  padding: 6px 11px;
+  font-size: 11px;
+  background: #eef0e4;
+  border-color: #c3cdb4;
+  border-radius: 7px;
+  color: #425a3f;
+}
+
+.login-error {
+  margin: 0 0 16px;
+  padding: 11px 14px;
+  font-size: 12px;
+  background: #f8e8da;
+  border: 1px solid #e0b79e;
+  border-left: 3px solid #a8472f;
+  border-radius: 8px;
+  color: #7e3c25;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 14px;
+}
+
+.login-foot {
+  margin: 20px 0 0;
+  font-size: 11px;
+  text-align: center;
+  color: #6a745e;
+}
+
+@media (max-width: 900px) {
+  .login {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .login-brand {
+    gap: 22px;
+    padding: 28px 24px;
+    border-right: 0;
+    border-bottom: 1px solid #b6a06a;
+  }
+
+  .login-brand-body h1 {
+    font-size: 32px;
+  }
+
+  .login-points {
+    display: none;
+  }
+
+  .login-panel {
+    padding: 30px 22px;
+  }
+}
+
+@media (max-width: 500px) {
+  .login-brand-body h1 {
+    font-size: 27px;
+  }
+
+  /* on a phone the form should be reachable without scrolling past a pitch */
+  .login-brand-body p {
+    display: none;
+  }
+}
