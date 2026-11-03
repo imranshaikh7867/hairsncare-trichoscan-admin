@@ -1,0 +1,250 @@
+/* Workspace shell: the sidebar stays put, only the workspace scrolls.
+ *
+ * The carried-over stylesheet lets the whole document scroll, which takes the
+ * header and the page nav off screen as soon as you work down a long template
+ * table. Here the shell is a full-height column — header, the status bar when
+ * it has something to say, then the layout row filling what is left — and the
+ * sidebar and main each scroll inside that row.
+ *
+ * `min-height: 0` is what makes it work: a flex item will not shrink below its
+ * content by default, so without it the layout row grows to fit the tables and
+ * the document scrolls again.
+ *
+ * Loaded after admin.css, which is left unchanged, so the overrides here win
+ * on equal specificity.
+ */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh; /* mobile browser toolbars make 100vh taller than the window */
+  overflow: hidden;
+}
+
+.app-shell > header.top,
+.app-shell > .status {
+  flex: 0 0 auto;
+}
+
+.app-shell > .layout {
+  flex: 1 1 auto;
+  min-height: 0; /* admin.css asks for a full-viewport minimum; not here */
+}
+
+.app-shell > .layout > nav,
+.app-shell > .layout > main {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.app-shell > .layout > nav {
+  display: flex;
+  flex-direction: column;
+}
+
+/* keep the workspace's own scroll from carrying on to the page behind it */
+.app-shell > .layout > main {
+  overscroll-behavior: contain;
+}
+
+/* --- signing out: in the header, and at the foot of the sidebar --- */
+
+.top-account {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.top-who {
+  display: grid;
+  line-height: 1.3;
+  text-align: right;
+}
+
+/* admin.css pushes any <small> in the header to the right with margin-left:
+   auto, which would break this pair out of the group */
+.top-account small {
+  margin-left: 0;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a9bfa4;
+}
+
+.top-who strong {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f6e7bf;
+}
+
+.top-signout {
+  padding: 9px 16px;
+  font-size: 12px;
+  background: #ffffff14;
+  border: 1px solid #b69e6577;
+  border-radius: 9px;
+  color: #f6e7bf;
+}
+
+.top-signout:hover {
+  background: #ffffff24;
+  border-color: #d8bd78;
+  color: #fff5da;
+}
+
+.nav-foot {
+  margin-top: auto; /* hold it at the bottom of the sidebar */
+  padding-top: 18px;
+  border-top: 1px solid #b19a5c33;
+}
+
+nav .nav-signout {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 13px;
+  text-align: left;
+  background: #b19a5c1a;
+  border: 1px solid #b19a5c55;
+  color: #f0dcae;
+}
+
+nav .nav-signout:hover {
+  background: #b19a5c33;
+  border-color: #cfb373;
+  color: #fff1cc;
+}
+
+@media (max-width: 900px) {
+  /* the sidebar becomes a row of pills above the workspace */
+  .app-shell > .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .app-shell > .layout > nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 12px;
+    overflow: visible;
+  }
+
+  /* the sidebar's own logout would sit a few pixels from the header's, so
+     at this width the header's "Sign out" is the only one */
+  .app-shell > .layout > nav .nav-foot {
+    display: none;
+  }
+
+  .top-account {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .top-who strong {
+    max-width: 50vw;
+  }
+}
+
+@media print {
+  /* printing a prescription needs the whole thing, not one screenful */
+  .app-shell {
+    height: auto;
+    overflow: visible;
+  }
+
+  .app-shell > .layout > main {
+    overflow: visible;
+  }
+}
+
+/* ── sync line ───────────────────────────────────────────────────────────
+   The workspace used to say "settings saved in this browser". They are saved
+   to the database now, and an admin editing a live care mapping should be
+   able to see at a glance whether their last change reached it. */
+
+.sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding-right: 16px;
+  margin-right: 2px;
+  border-right: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: #6a7560;
+  white-space: nowrap;
+}
+
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #7fa06a;
+}
+
+.sync-busy .sync-dot {
+  background: #c0a258;
+  animation: sync-pulse 1.1s ease-in-out infinite;
+}
+
+.sync-error {
+  color: #a5372b;
+}
+
+.sync-error .sync-dot {
+  background: #a5372b;
+}
+
+@keyframes sync-pulse {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* The first paint, before Firebase has said whether a session was restored.
+   Without it a signed-in admin sees the login form flash on every reload. */
+.boot {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg, #faf8f1);
+  color: #6a7560;
+  font-size: 12px;
+}
+
+.boot-mark {
+  font-size: 30px;
+  color: #b89c60;
+  animation: sync-pulse 1.5s ease-in-out infinite;
+}
+
+/* Reason the care data did not load, shown in place of the workspace. */
+.hero-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #6a7560;
+}
+
+@media (max-width: 1100px) {
+  .sync {
+    display: none; /* the header band is tight; the toast still reports saves */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sync-busy .sync-dot,
+  .boot-mark {
+    animation: none;
+  }
+}
