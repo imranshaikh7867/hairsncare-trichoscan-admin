@@ -39,6 +39,11 @@ type RequestOptions = {
   body?: unknown;
   /** Some calls are made before a sign-in has settled. */
   anonymous?: boolean;
+  /** Extra request headers — the care workspace sends its state token here. */
+  headers?: Record<string, string>;
+  /** Read response metadata before the body is unwrapped. Used to pick the
+   *  care state token off the response, which is not part of the payload. */
+  onResponse?: (response: Response) => void;
 };
 
 export async function api<T>(path: string, options: RequestOptions = {}): Promise<T> {
@@ -49,10 +54,11 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
     );
   }
 
-  const { method = "GET", body, anonymous = false } = options;
+  const { method = "GET", body, anonymous = false, onResponse } = options;
   const headers: Record<string, string> = { Accept: "application/json" };
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (!anonymous) headers.Authorization = `Bearer ${await idToken()}`;
+  Object.assign(headers, options.headers || {});
 
   let response: Response;
   try {
@@ -70,6 +76,10 @@ export async function api<T>(path: string, options: RequestOptions = {}): Promis
       0
     );
   }
+
+  // Before anything can throw: a conflict response carries the current token
+  // too, and the caller wants it either way.
+  onResponse?.(response);
 
   const text = await response.text();
   let payload: unknown = null;
